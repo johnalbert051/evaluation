@@ -317,6 +317,22 @@ $admin_name = isset($_SESSION['admin_name']) ? htmlspecialchars($_SESSION['admin
         .form-group button:hover {
             background-color: #2980b9;
         }
+
+        .action-buttons .btn-danger {
+            color: #fff;
+            background-color: red !important;
+        }
+        .btn-danger:hover {
+            background-color: #e80000 !important;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
     </style>
 </head>
 <body>
@@ -428,8 +444,9 @@ $admin_name = isset($_SESSION['admin_name']) ? htmlspecialchars($_SESSION['admin
                             <a href='custom_question.php?semester_id=" . $row["id"] . "' class='btn-questions'><i class='fas fa-question-circle'></i> Manage Questions</a>
                           </td>";
                     echo "<td class='action-buttons'>
-                            <span class='btn-edit' data-id='" . $row["id"] . "'><i class='fas fa-edit'></i></span>
-                            <span class='btn-delete' data-id='" . $row["id"] . "'><i class='fas fa-trash-alt'></i></span>
+                            <button class='btn btn-danger' onclick='deleteSemester(" . $row["id"] . ")'>
+                                <i class='fas fa-trash-alt'></i> Delete
+                            </button>
                           </td>";
                     echo "</tr>";
                 }
@@ -570,6 +587,39 @@ if (isset($_POST['submit'])) {
             }
         });
     });
+
+    function deleteSemester(id) {
+        if (confirm('Are you sure you want to delete this semester? This action cannot be undone.')) {
+            fetch('delete_semester.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + id
+            })
+            .then(response => response.text())  // Change this line
+            .then(text => {
+                console.log('Raw response:', text);  // Log the raw response
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    throw new Error('Invalid JSON response: ' + text);
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    alert('Semester deleted successfully');
+                    location.reload();
+                } else {
+                    throw new Error('Server error: ' + (data.message || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the semester: ' + error.message);
+            });
+        }
+    }
 </script>
 </body>
 </html>

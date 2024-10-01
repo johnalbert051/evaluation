@@ -429,5 +429,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
     // Your existing JavaScript code...
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const announcementList = document.getElementById('announcement-list');
+    if (announcementList) {
+        setTimeout(() => {
+            const newAnnouncement = document.createElement('li');
+            newAnnouncement.textContent = 'New announcement: Online evaluation Current Semester Date';
+            newAnnouncement.style.color = '#f50057'; // Replace with an actual color
+            newAnnouncement.style.fontWeight = 'bold';
+            newAnnouncement.classList.add('fade-in');
+            announcementList.prepend(newAnnouncement);
+        }, 3000);
+    } else {
+        console.error('Announcement list element not found');
+    }
+});
+</script>
 </body>
 </html>
